@@ -99,7 +99,7 @@ export default class ObsidianLinkEmbedPlugin extends Plugin {
 			});
 		});
 
-		// Register the markdown code block processor for 'embed' blocks
+		// Register the markdown code block processor for 'embed' blocks (backward compatibility)
 		this.registerMarkdownCodeBlockProcessor(
 			'embed',
 			async (source, el, ctx) => {
@@ -114,6 +114,24 @@ export default class ObsidianLinkEmbedPlugin extends Plugin {
 				);
 			},
 		);
+
+		// Register processor for custom component name if different from 'embed'
+		if (this.settings.componentName !== 'embed') {
+			this.registerMarkdownCodeBlockProcessor(
+				this.settings.componentName,
+				async (source, el, ctx) => {
+					await handleEmbedCodeBlock(
+						source,
+						el,
+						ctx,
+						this.settings,
+						this.cache,
+						this.app.vault,
+						this.imageLoadAttempts,
+					);
+				},
+			);
+		}
 
 		// Add the settings tab
 		this.addSettingTab(new ObsidianLinkEmbedSettingTab(this.app, this));

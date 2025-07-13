@@ -1,4 +1,16 @@
-export const MarkdownTemplate = `::embeded
+// Template for Obsidian processing (standard code blocks)
+export const getObsidianTemplate = (componentName: string = 'embeded') => `\`\`\`${componentName}
+title: "{{{title}}}"
+image: "{{{image}}}"
+description: "{{{description}}}"
+url: "{{{url}}}"
+favicon: "{{{favicon}}}"{{#aspectRatio}}
+aspectRatio: "{{aspectRatio}}"{{/aspectRatio}}{{#metadata}}
+{{{metadata}}}{{/metadata}}
+\`\`\``;
+
+// Template for MDC export (Nuxt Content format)
+export const getMDCTemplate = (componentName: string = 'embeded') => `::${componentName}
 --- 
 title: "{{{title}}}"
 image: "{{{image}}}"
