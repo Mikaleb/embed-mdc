@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-link-embed",
-	"name": "Link Embed",
-	"version": "2.9.0",
+	"id": "obsidian-embed-mdc",
+	"name": "Embed MDC",
+	"version": "3.1.0",
 	"minAppVersion": "0.12.0",
-	"description": "This plugin auto-fetches page metadata to embed Notion-style link preview cards.",
-	"author": "SErAphLi",
-	"authorUrl": "https://github.com/Seraphli",
+	"description": "Transform URLs in your Obsidian notes into rich embedded previews with MDC (Markdown Components) format support.",
+	"author": "Mikaleb",
+	"authorUrl": "https://github.com/Mikaleb",
 	"isDesktopOnly": false
 }
