@@ -1,124 +1,179 @@
-# Obsidian Link Embed
+# Obsidian Embed MDC
 
-This plugin allows you to convert URLs in your notes into embedded previews.
-
-This is how it looks.
+> Transform URLs in your Obsidian notes into rich embedded previews with MDC (Markdown Components) format support.
 
 ![demo](https://raw.githubusercontent.com/Seraphli/obsidian-link-embed/main/docs/demo.gif)
 
-**Note** Starting from 2.0.0, embeds are rendered with `MarkdownCodeBlockProcessor`, which avoids expanding the HTML block. You can convert your old embeds to new code blocks with the `Convert` button in the setting.
+## Overview
 
-PS: If you happen to know any other website that provides free API for users to grab metadata from URLs, please let me know. This plugin can be more robust with your help.
+Obsidian Embed MDC automatically converts URLs into rich preview cards with titles, images, descriptions, and metadata. Unlike basic link previews, it generates structured MDC format compatible with Nuxt Content and other static site generators.
 
-## Usage
+The plugin offers multiple parsing engines, smart caching, and customizable templates - making it ideal for content creators who want professional-looking embeds without manual formatting.
 
-The easiest way to use is by pasting your link and then creating an embed preview.
+## Installation
 
-When pasting a URL, a popup suggestion menu will appear (if enabled) with options to:
+1. Open Obsidian Settings → Community Plugins
+2. Search for "Embed MDC"
+3. Install and enable the plugin
 
--   Create Embed - Converts the URL into an embedded preview
--   Create Markdown Link - Converts the URL into a standard markdown link `[title](url)`
--   Dismiss - Closes the popup (can be removed in settings)
+**Requirements:** Obsidian v0.15.0+
 
-Additionally, there are three ways to pass the URL to this plugin.
+## Getting Started
 
-1. Selecting the URL you want to parse
+### Method 1: Paste & Select (Easiest)
 
-If nothing is selected
+1. Paste any URL into your note
+2. Choose from the popup menu:
+    - **Create Embed** - Rich preview with title, image, and description
+    - **Create Markdown Link** - Standard `[title](url)` format
+    - **Dismiss** - Close popup
 
-2. Put your cursor within the URL text that you want to parse
+### Method 2: Command Palette
 
-Or
+1. Select a URL, place cursor in URL text, or copy URL to clipboard
+2. Open Command Palette (`Ctrl/Cmd + P`)
+3. Run `Link Embed: Embed link`
 
-3. Copy the URL into the clipboard
+> **Tip**: Use `Link Embed: Embed link with...` to choose a specific parser if the default fails.
 
-Then
+## Configuration
 
--   Open the command Palette
--   Select the command `Link Embed: Embed link`
+### Basic Settings
 
-In case some parsers are not working, you can also use the `Link Embed: Embed link with ...` to specify one parser.
+-   **Auto Embed**: Automatically create embeds when pasting URLs (disabled by default)
+-   **Parser Selection**: Choose primary and secondary parsers with automatic fallback
+-   **In Place**: Replace selected URL instead of inserting on next line
 
-### Settings
+### Advanced Options
 
-If you enable `Auto Embed` in the setting, the plugin will automatically replace the link with an embed preview when you paste the link into an empty line. Although this option is quite convenient, I set the default setting to false in case someone doesn't know what happened.
+-   **Save Images to Vault**: Download and store images locally (folder: `link-embed-images`)
+-   **Respect Aspect Ratio**: Maintain original image proportions
+-   **Enable Favicon**: Show website icons in embeds
+-   **Use Cache**: Cache images and metadata for better performance
+-   **Max Concurrent Parsers**: Limit simultaneous operations to prevent system overload
+-   **Custom Metadata**: Add notes, tags, or custom data to embeds
+-   **Metadata Templates**: Use variables like `{{parser}}`, `{{date}}`, `{{#formatDate}}YYYY-MM-DD{{/formatDate}}`
 
-You can change the default parser in the plugin settings. The plugin supports a primary and secondary parser configuration with fallback mechanism - if the primary parser fails, the plugin will try the secondary parser.
+## Parsers
 
-`In Place` means the selection in the editor will be removed and replaced with the embed.
+| Parser                                      | API Required | Limits     | Notes                |
+| ------------------------------------------- | ------------ | ---------- | -------------------- |
+| **Local** (Default)                         | ❌           | None       | Parses HTML directly |
+| [JSONLink](https://jsonlink.io/)            | ✅           | Varies     | Requires API key     |
+| [MicroLink](https://microlink.io/)          | ❌           | 50/day     | Free tier available  |
+| [Iframely](https://iframely.com/)           | ❌           | 1000/month | Free tier available  |
+| [LinkPreview](https://www.linkpreview.net/) | ✅           | Varies     | Requires API key     |
 
-By default, the embedded preview will be inserted into the next line, but this can be changed with the `In Place` option.
+## MDC Format
 
-#### Advanced Settings
+Embeds are generated in MDC (Markdown Components) format:
 
--   **Save Images to Vault**: When enabled, images from embedded links will be downloaded and saved to your vault.
--   **Image Folder Path**: Specify the folder where images will be saved (default: "link-embed-images").
--   **Respect Aspect Ratio**: Preserves the original aspect ratio of embedded images for better visual layout.
--   **Use Cache**: When enabled, the plugin will cache favicon images and aspect ratios to improve performance.
--   **Enable Favicon**: When enabled, website favicons will be displayed in link embeds.
--   **Max Concurrent Local Parsers**: Maximum number of simultaneous local parsing operations. Lower values reduce system load but might make link embeds appear more slowly.
--   **Metadata**: A feature that allows you to include custom information with your embeds. This can be used to add notes, tags, or any additional data you want to associate with the embedded link.
--   **Metadata Template**: Customize metadata with variables like `{{parser}}` for parser type, `{{date}}` for date. For custom date format use `{{#formatDate}}YYYY-MM-DD HH:mm:ss{{/formatDate}}`.
+```markdown
+## ::embeded
 
-## Supported Parsers
-
-The plugin supports the following parsers:
-
--   Local (Default) - No API needed, parses HTML directly
--   [JSONLink](https://jsonlink.io/) - Requires API key
--   [MicroLink](https://microlink.io/) - Limited to 50 requests per day
--   [Iframely](https://iframely.com/) - Limited to 1000 requests per month
--   [LinkPreview](https://www.linkpreview.net/) - Requires API key
-
-## Embed Format
-
-MDC format:
-
-```
-::embeded
----
-title: "Example Title"
-image: "https://example.com/image.jpg"
-description: "This is an example description"
+title: "Page Title"
+image: "https://example.com/preview.jpg"
+description: "Page description"
 url: "https://example.com"
 favicon: "https://example.com/favicon.ico"
 aspectRatio: "1.5"
-metadata: "Additional custom metadata can be included here"
+metadata: "Custom notes or tags"
 parser: "local"
 date: "2023-04-01"
-custom_date: "2023-04-01 13:45:22"
+
 ---
+
 ::
 ```
 
-The `aspectRatio` parameter is optional and helps maintain the proper image dimensions.
+### Nuxt Content Integration
 
-The `favicon` parameter is optional and displays the website's favicon icon.
+Create `components/content/Embeded.vue` to render embeds:
 
-The `metadata` field is also optional and can be used to include any additional information you want to associate with the link.
+```vue
+<template>
+	<div class="embed-card">
+		<img v-if="image" :src="image" :alt="title" />
+		<div class="embed-content">
+			<img v-if="favicon" :src="favicon" class="favicon" />
+			<h3>{{ title }}</h3>
+			<p>{{ description }}</p>
+			<a :href="url" target="_blank">{{ url }}</a>
+		</div>
+	</div>
+</template>
 
-## Interface Features
+<script setup>
+defineProps({
+	title: String,
+	image: String,
+	description: String,
+	url: String,
+	favicon: String,
+	aspectRatio: String,
+	metadata: String,
+	parser: String,
+	date: String,
+});
+</script>
+```
 
--   **Refresh Button**: When hovering over an embedded link, a refresh button appears that allows you to update the link metadata and preview without recreating the embed. This is particularly useful when the content of the original link has been updated and you want to refresh the embedded preview to reflect these changes.
--   **Copy Button**: When hovering over an embedded link, a copy button appears that allows you to quickly copy the embed code for sharing or reusing elsewhere in your notes.
--   **Popup Menu**: When enabled, pasting a URL will show a popup menu with options to create an embed, create a markdown link, or dismiss.
--   **In-place Replacement**: Option to replace the selected URL with the embed instead of inserting on the next line.
+## Features
 
-## Performance Features
+### Interface
 
--   **Caching System**: Images and favicons are cached to improve performance and reduce API calls.
--   **Concurrency Limiter**: Controls how many local parsers can run simultaneously to prevent system overload.
--   **Lazy Loading**: Images are loaded asynchronously to improve rendering performance.
+-   **Hover Controls**: Refresh and copy buttons appear on hover
+-   **Popup Menu**: Quick options when pasting URLs
+-   **In-place Replacement**: Replace URLs directly or insert below
 
-## Current Version
+### Performance
 
-The current plugin version is 2.8.4. Check the [GitHub repository](https://github.com/Seraphli/obsidian-link-embed) for the latest updates and changes.
+-   **Smart Caching**: Stores images and favicons locally
+-   **Concurrency Control**: Prevents system overload
+-   **Lazy Loading**: Async image loading for better performance
 
-## See Also
+## Contributing
 
-[obsidian-aggregator](https://github.com/Seraphli/obsidian-aggregator)
+We welcome contributions! Please:
 
-## Thanks
+1. **Bug Reports**: Use GitHub Issues with detailed reproduction steps
+2. **Feature Requests**: Describe use case and expected behavior
+3. **Pull Requests**: Fork → Branch → Test → PR
 
--   [Obsidian Rich Link](https://github.com/dhamaniasad/obsidian-rich-links)
--   [Obsidian Auto Link Title](https://github.com/zolrath/obsidian-auto-link-title)
+[Contributing Guidelines](CONTRIBUTING.md) | [Code of Conduct](CODE_OF_CONDUCT.md)
+
+## Known Issues
+
+-   Some sites block automated parsing (use alternative parsers)
+-   Large images may slow initial load (enable caching)
+-   Rate limits apply to free API parsers
+
+## Documentation
+
+-   [API Documentation](docs/api.md)
+-   [Advanced Configuration](docs/advanced.md)
+-   [Troubleshooting Guide](docs/troubleshooting.md)
+-   [Parser Comparison](docs/parsers.md)
+
+## FAQ
+
+**Q: Why aren't embeds showing?**  
+A: Check parser settings and network connectivity. Try alternative parsers.
+
+**Q: Can I customize embed appearance?**  
+A: Yes, modify the MDC component in your content framework.
+
+**Q: How do I backup embed data?**  
+A: Enable "Save Images to Vault" to store locally.
+
+## License
+
+[MIT License](LICENSE) - Free for personal and commercial use.
+
+## Credits
+
+**Created by:** [Seraphli](https://github.com/Seraphli)  
+**Updated by:** [Mikaleb](https://github.com/Mikaleb)  
+**Built upon:** [Obsidian Rich Link](https://github.com/dhamaniasad/obsidian-rich-links), [Obsidian Auto Link Title](https://github.com/zolrath/obsidian-auto-link-title)
+
+**Version:** 3.0.0 | [Changelog](CHANGELOG.md) | [GitHub](https://github.com/Mikaleb/obsidian-embed-mdc)
