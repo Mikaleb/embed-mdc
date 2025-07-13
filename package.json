@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-embed-mdc",
-	"version": "3.0.0",
+	"version": "3.1.0",
 	"description": "This plugin auto-fetches page metadata to embed Notion-style link preview cards.",
 	"main": "main.js",
 	"scripts": {
