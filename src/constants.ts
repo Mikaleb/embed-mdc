@@ -1,4 +1,5 @@
-export const MarkdownTemplate = `::embeded --- 
+export const MarkdownTemplate = `::embeded
+--- 
 title: "{{{title}}}"
 image: "{{{image}}}"
 description: "{{{description}}}"
@@ -6,7 +7,8 @@ url: "{{{url}}}"
 favicon: "{{{favicon}}}"{{#aspectRatio}}
 aspectRatio: "{{aspectRatio}}"{{/aspectRatio}}{{#metadata}}
 {{{metadata}}}{{/metadata}}
---- ::`;
+---
+::`;
 
 export const HTMLTemplate = `<div class="embed">
   <div class="w _lc _sm _od _lh14 _ts">

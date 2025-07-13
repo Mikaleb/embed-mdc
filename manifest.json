@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-embed-mdc",
 	"name": "Embed MDC",
-	"version": "3.1.0",
+	"version": "3.2.0",
 	"minAppVersion": "0.12.0",
 	"description": "Transform URLs in your Obsidian notes into rich embedded previews with MDC (Markdown Components) format support.",
 	"author": "Mikaleb",
