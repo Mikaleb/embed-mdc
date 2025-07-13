@@ -1,6 +1,6 @@
-# Obsidian Embed MDC
+# Embed MDC - Obsidian
 
-> Transform URLs in your Obsidian notes into rich embedded previews with MDC (Markdown Components) format support.
+> Transform URLs in your Obsidian notes into MDC rich embedded previews with MDC (Markdown Components) format support.
 
 ![demo](https://raw.githubusercontent.com/Seraphli/obsidian-link-embed/main/docs/demo.gif)
 
@@ -40,19 +40,21 @@ The plugin offers multiple parsing engines, smart caching, and customizable temp
 
 ### Basic Settings
 
--   **Auto Embed**: Automatically create embeds when pasting URLs (disabled by default)
--   **Parser Selection**: Choose primary and secondary parsers with automatic fallback
--   **In Place**: Replace selected URL instead of inserting on next line
+- **Auto Embed**: Automatically create embeds when pasting URLs (disabled by default)
+- **Parser Selection**: Choose primary and secondary parsers with automatic fallback
+- **In Place**: Replace selected URL instead of inserting on next line
 
 ### Advanced Options
 
--   **Save Images to Vault**: Download and store images locally (folder: `link-embed-images`)
--   **Respect Aspect Ratio**: Maintain original image proportions
--   **Enable Favicon**: Show website icons in embeds
--   **Use Cache**: Cache images and metadata for better performance
--   **Max Concurrent Parsers**: Limit simultaneous operations to prevent system overload
--   **Custom Metadata**: Add notes, tags, or custom data to embeds
--   **Metadata Templates**: Use variables like `{{parser}}`, `{{date}}`, `{{#formatDate}}YYYY-MM-DD{{/formatDate}}`
+- **Component Name**: Customize the MDC component name (default: "embeded")
+- **Use MDC Format**: Toggle between Obsidian code blocks and MDC format for Nuxt Content
+- **Save Images to Vault**: Download and store images locally (folder: `link-embed-images`)
+- **Respect Aspect Ratio**: Maintain original image proportions
+- **Enable Favicon**: Show website icons in embeds
+- **Use Cache**: Cache images and metadata for better performance
+- **Max Concurrent Parsers**: Limit simultaneous operations to prevent system overload
+- **Custom Metadata**: Add notes, tags, or custom data to embeds
+- **Metadata Templates**: Use variables like `{{parser}}`, `{{date}}`, `{{#formatDate}}YYYY-MM-DD{{/formatDate}}`
 
 ## Parsers
 
@@ -66,11 +68,14 @@ The plugin offers multiple parsing engines, smart caching, and customizable temp
 
 ## MDC Format
 
-Embeds are generated in MDC (Markdown Components) format:
+Embeds can be generated in two formats:
 
-```markdown
-## ::embeded
+### Obsidian Format (Default)
 
+Standard code blocks that render natively in Obsidian:
+
+````markdown
+```embeded
 title: "Page Title"
 image: "https://example.com/preview.jpg"
 description: "Page description"
@@ -80,15 +85,39 @@ aspectRatio: "1.5"
 metadata: "Custom notes or tags"
 parser: "local"
 date: "2023-04-01"
-
----
-
-::
 ```
+````
+
+### MDC Format (For Nuxt Content)
+
+When "Use MDC Format" is enabled:
+
+````
+
+
+```markdown
+
+::embeded
+---
+title: "Page Title"
+image: "https://example.com/preview.jpg"
+description: "Page description"
+url: "https://example.com"
+favicon: "https://example.com/favicon.ico"
+aspectRatio: "1.5"
+metadata: "Custom notes or tags"
+parser: "local"
+date: "2023-04-01"
+---
+::
+
+````
+
+> **Note**: You can customize the component name ("embeded") in settings to use any name like "card", "link-preview", etc.
 
 ### Nuxt Content Integration
 
-Create `components/content/Embeded.vue` to render embeds:
+Create a Vue component matching your component name (e.g., `components/content/Embeded.vue` for default, or `components/content/Card.vue` if you changed the component name):
 
 ```vue
 <template>
@@ -122,15 +151,15 @@ defineProps({
 
 ### Interface
 
--   **Hover Controls**: Refresh and copy buttons appear on hover
--   **Popup Menu**: Quick options when pasting URLs
--   **In-place Replacement**: Replace URLs directly or insert below
+- **Hover Controls**: Refresh and copy buttons appear on hover
+- **Popup Menu**: Quick options when pasting URLs
+- **In-place Replacement**: Replace URLs directly or insert below
 
 ### Performance
 
--   **Smart Caching**: Stores images and favicons locally
--   **Concurrency Control**: Prevents system overload
--   **Lazy Loading**: Async image loading for better performance
+- **Smart Caching**: Stores images and favicons locally
+- **Concurrency Control**: Prevents system overload
+- **Lazy Loading**: Async image loading for better performance
 
 ## Contributing
 
@@ -144,16 +173,16 @@ We welcome contributions! Please:
 
 ## Known Issues
 
--   Some sites block automated parsing (use alternative parsers)
--   Large images may slow initial load (enable caching)
--   Rate limits apply to free API parsers
+- Some sites block automated parsing (use alternative parsers)
+- Large images may slow initial load (enable caching)
+- Rate limits apply to free API parsers
 
 ## Documentation
 
--   [API Documentation](docs/api.md)
--   [Advanced Configuration](docs/advanced.md)
--   [Troubleshooting Guide](docs/troubleshooting.md)
--   [Parser Comparison](docs/parsers.md)
+- [API Documentation](docs/api.md)
+- [Advanced Configuration](docs/advanced.md)
+- [Troubleshooting Guide](docs/troubleshooting.md)
+- [Parser Comparison](docs/parsers.md)
 
 ## FAQ
 
@@ -176,4 +205,4 @@ A: Enable "Save Images to Vault" to store locally.
 **Updated by:** [Mikaleb](https://github.com/Mikaleb)  
 **Built upon:** [Obsidian Rich Link](https://github.com/dhamaniasad/obsidian-rich-links), [Obsidian Auto Link Title](https://github.com/zolrath/obsidian-auto-link-title)
 
-**Version:** 3.0.0 | [Changelog](CHANGELOG.md) | [GitHub](https://github.com/Mikaleb/obsidian-embed-mdc)
+**Version:** 3.3.0 | [Changelog](CHANGELOG.md) | [GitHub](https://github.com/Mikaleb/embed-mdc)

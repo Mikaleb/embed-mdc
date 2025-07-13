@@ -9,7 +9,8 @@ import Mustache from 'mustache';
 import { Selected } from './exEditor';
 import { showNotice } from './errorUtils';
 import {
-	MarkdownTemplate,
+	getObsidianTemplate,
+	getMDCTemplate,
 	SPINNER,
 	EmbedInfo,
 	HTMLTemplate,
@@ -191,7 +192,10 @@ export function generateEmbedMarkdown(
 	};
 
 	// Create embed markdown
-	return Mustache.render(MarkdownTemplate, escapedData) + '\n';
+	const template = settings.useMDCFormat 
+		? getMDCTemplate(settings.componentName)
+		: getObsidianTemplate(settings.componentName);
+	return Mustache.render(template, escapedData) + '\n';
 }
 
 /**
@@ -536,8 +540,11 @@ export async function embedUrl(
 	}
 
 	const startCursor = editor.getCursor();
+	const template = settings.useMDCFormat 
+		? getMDCTemplate(settings.componentName)
+		: getObsidianTemplate(settings.componentName);
 	const dummyEmbed =
-		Mustache.render(MarkdownTemplate, {
+		Mustache.render(template, {
 			title: 'Fetching',
 			image: SPINNER,
 			description: `Fetching ${url}`,

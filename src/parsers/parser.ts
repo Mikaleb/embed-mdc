@@ -99,7 +99,7 @@ export abstract class Parser {
 				// Use a function to get favicon that will be provided externally
 				// This will be handled by specific parsers that know how to fetch favicons
 				const plugin = (window as any).app?.plugins?.plugins[
-					'obsidian-link-embed'
+					'embed-mdc'
 				];
 				if (plugin && plugin.fetchFavicon) {
 					const favicon = await plugin.fetchFavicon(url);
@@ -141,7 +141,7 @@ export abstract class Parser {
 			try {
 				// Get the plugin instance from the main file (if available)
 				const plugin = (window as any).app?.plugins?.plugins[
-					'obsidian-link-embed'
+					'embed-mdc'
 				];
 				// Get cache and useCache setting
 				const cache = plugin?.settings?.useCache ? plugin?.cache : null;

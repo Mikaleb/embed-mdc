@@ -1,7 +1,7 @@
 import { App, PluginSettingTab, Setting, Notice } from 'obsidian';
 import ObsidianLinkEmbedPlugin from 'main';
 import { parseOptions } from './parsers';
-import { REGEX, MarkdownTemplate } from './constants';
+import { REGEX, getObsidianTemplate, getMDCTemplate } from './constants';
 import Mustache from 'mustache';
 import he from 'he';
 
@@ -24,6 +24,8 @@ export interface ObsidianLinkEmbedPluginSettings {
 	useCache: boolean;
 	enableFavicon: boolean;
 	maxConcurrentLocalParsers: number;
+	componentName: string;
+	useMDCFormat: boolean;
 }
 
 export const DEFAULT_SETTINGS: ObsidianLinkEmbedPluginSettings = {
@@ -46,6 +48,8 @@ export const DEFAULT_SETTINGS: ObsidianLinkEmbedPluginSettings = {
 	useCache: true,
 	enableFavicon: false,
 	maxConcurrentLocalParsers: 1,
+	componentName: 'embeded',
+	useMDCFormat: false,
 };
 
 export class ObsidianLinkEmbedSettingTab extends PluginSettingTab {
@@ -64,6 +68,30 @@ export class ObsidianLinkEmbedSettingTab extends PluginSettingTab {
 		containerEl.createEl('h2', { text: 'Link Embed' });
 
 		containerEl.createEl('h3', { text: 'User Option' });
+
+		new Setting(containerEl)
+			.setName('Component Name')
+			.setDesc('Name of the MDC component (default: "embeded")')
+			.addText((value) => {
+				value
+					.setValue(this.plugin.settings.componentName)
+					.onChange((value) => {
+						this.plugin.settings.componentName = value || 'embeded';
+						this.plugin.saveSettings();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName('Use MDC Format')
+			.setDesc('Generate MDC format (::component) for Nuxt Content. When disabled, uses standard code blocks for Obsidian.')
+			.addToggle((value) => {
+				value
+					.setValue(this.plugin.settings.useMDCFormat)
+					.onChange((value) => {
+						this.plugin.settings.useMDCFormat = value;
+						this.plugin.saveSettings();
+					});
+			});
 
 		new Setting(containerEl)
 			.setName('Popup Menu')
@@ -166,8 +194,11 @@ export class ObsidianLinkEmbedSettingTab extends PluginSettingTab {
 								description: description,
 								url: elem[1],
 							};
+							const template = this.plugin.settings.useMDCFormat 
+								? getMDCTemplate(this.plugin.settings.componentName)
+								: getObsidianTemplate(this.plugin.settings.componentName);
 							const embed = Mustache.render(
-								MarkdownTemplate,
+								template,
 								data,
 							);
 							if (this.plugin.settings.debug) {
